@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/app_colors.dart';
-import '../../constants/app_strings.dart';
 import '../../models/chat_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/chat_provider.dart';
@@ -202,7 +201,6 @@ class ChatsScreen extends ConsumerWidget {
           MaterialPageRoute(
             builder: (context) => ChatDetailScreen(
               chatId: chat.id,
-              otherUserId: otherUserId,
             ),
           ),
         );
