@@ -1,0 +1,323 @@
+class AppStrings {
+  // عام
+  static const String appName = 'الصانع الحرفي';
+  static const String welcome = 'مرحباً بك';
+  static const String loading = 'جاري التحميل...';
+  static const String error = 'حدث خطأ';
+  static const String retry = 'إعادة المحاولة';
+  static const String cancel = 'إلغاء';
+  static const String confirm = 'تأكيد';
+  static const String save = 'حفظ';
+  static const String edit = 'تعديل';
+  static const String delete = 'حذف';
+  static const String search = 'بحث';
+  static const String filter = 'تصفية';
+  static const String settings = 'الإعدادات';
+  static const String profile = 'الملف الشخصي';
+  static const String logout = 'تسجيل الخروج';
+  
+  // التسجيل والدخول
+  static const String login = 'تسجيل الدخول';
+  static const String register = 'إنشاء حساب';
+  static const String email = 'البريد الإلكتروني';
+  static const String password = 'كلمة المرور';
+  static const String confirmPassword = 'تأكيد كلمة المرور';
+  static const String name = 'الاسم';
+  static const String phone = 'رقم الهاتف';
+  static const String forgotPassword = 'نسيت كلمة المرور؟';
+  static const String dontHaveAccount = 'ليس لديك حساب؟';
+  static const String alreadyHaveAccount = 'لديك حساب بالفعل؟';
+  
+  // أنواع المستخدمين
+  static const String userType = 'نوع الحساب';
+  static const String craftsman = 'أنا حرفي';
+  static const String client = 'أبحث عن حرفي';
+  static const String supplier = 'أنا مورد';
+  
+  // المهن
+  static const String profession = 'الحرفة';
+  static const String selectProfession = 'اختر حرفتك';
+  static const String experienceYears = 'سنوات الخبرة';
+  static const String workCities = 'المدن التي تعمل بها';
+  static const String selectWorkCities = 'اختر المدن التي تعمل بها';
+  static const String country = 'الدولة';
+  static const String selectCountry = 'اختر دولتك';
+  
+  // الشاشة الرئيسية
+  static const String home = 'الرئيسية';
+  static const String requests = 'الطلبات';
+  static const String chats = 'المحادثات';
+  static const String availableCraftsmen = 'الحرفيون المتاحون';
+  static const String suppliers = 'الموردون';
+  static const String clientDashboardTitle = 'لوحة تحكم العميل';
+  static const String craftsmanDashboardTitle = 'لوحة تحكم الحرفي';
+  static const String makeNewRequest = 'إنشاء طلب جديد';
+  static const String selectProfessionForRequest = 'اختر نوع الحرفي المطلوب';
+  static const String enterCity = 'أدخل المدينة';
+  static const String city = 'المدينة';
+  static const String recordAudioRequest = 'سجل طلبك الصوتي';
+  static const String submitRequest = 'إرسال الطلب';
+  static const String requestSubmittedSuccessfully = 'تم إرسال طلبك بنجاح!';
+  static const String craftsmanStatus = 'حالة الحرفي';
+  static const String notAvailable = 'غير متاح للعمل';
+  static const String viewMyProfessionProfile = 'عرض ملفي الشخصي كحرفي';
+  static const String recentActivity = 'النشاطات الأخيرة';
+  static const String noRecentActivityYet = 'لا يوجد نشاطات حديثة حتى الآن.';
+  static const String clientDashboardWelcomeMessage = 'مرحباً بك! ابحث عن الحرفي المناسب لمشروعك';
+  static const String craftsmanDashboardWelcomeMessage = 'مرحباً بك! استقبل طلبات العمل الجديدة';
+  static const String selectCraftsmanType = 'اختر نوع الحرفي';
+  static const String audioRecordedSuccessfully = 'تم تسجيل الصوت بنجاح';
+  static const String dialect = 'اللهجة';
+  static const String selectDialect = 'اختر لهجتك';
+  static const String moroccan = 'مغربية';
+  static const String algerian = 'جزائرية';
+  static const String tunisian = 'تونسية';
+  static const String recordAudio = 'تسجيل صوتي';
+  static const String stopRecording = 'إيقاف التسجيل';
+  static const String playAudio = 'تشغيل الصوت';
+  static const String pauseAudio = 'إيقاف مؤقت';
+  static const String deleteAudio = 'حذف التسجيل';
+  static const String microphonePermissionMessage = 'يحتاج التطبيق إذن الوصول إلى الميكروفون لتسجيل الرسائل الصوتية';
+  static const String grantPermission = 'منح الإذن';
+  static const String directedTo = 'موجه إلى';
+  static const String workStatus = 'حالة العمل';
+  static const String availableForWork = 'متاح للعمل';
+  static const String notAvailableForWork = 'غير متاح للعمل';
+  static const String willReceiveJobAlerts = 'ستتلقى تنبيهات الطلبات الجديدة';
+  static const String willNotReceiveJobAlerts = 'لن تتلقى تنبيهات الطلبات';
+  static const String recentJobRequests = 'الطلبات الأخيرة';
+  static const String viewAll = 'عرض الكل';
+  static const String unknownUser = 'مستخدم غير معروف';
+  static const String accountType = 'نوع الحساب';
+  static const String notSpecified = 'غير محدد';
+  static const String unknown = 'غير معروف';
+  static const String available = 'متاح';
+  static const String microphonePermissionDeniedMessage = 'تم رفض إذن الميكروفون. يرجى منح الإذن من إعدادات التطبيق.';
+
+  // الطلبات
+  static const String sendRequest = 'إرسال طلب';
+  static const String recordAudioMessage = 'سجل رسالة صوتية';
+  static const String addTextDescription = 'إضافة وصف نصي (اختياري)';
+  static const String location = 'الموقع';
+  static const String currentLocation = 'الموقع الحالي';
+  static const String requestSent = 'تم إرسال الطلب بنجاح';
+  static const String noRequestsFound = 'لا توجد طلبات حالياً';
+  static const String currentRequests = 'الطلبات الحالية';
+  static const String noRequestsYet = 'لا توجد طلبات حتى الآن.';
+  static const String viewDetails = 'عرض التفاصيل';
+  static const String acceptRequest = 'قبول الطلب';
+  static const String declineRequest = 'رفض الطلب';
+  static const String requestDetails = 'تفاصيل الطلب';
+  static const String clientInfo = 'معلومات العميل';
+  static const String requestStatus = 'حالة الطلب';
+  static const String createdAt = 'تاريخ الإنشاء';
+  static const String acceptedBy = 'تم القبول بواسطة';
+  static const String yourRequests = 'طلباتك';
+  static const String acceptedRequests = 'الطلبات المقبولة';
+  static const String pendingRequests = 'الطلبات المعلقة';
+  static const String declinedRequests = 'الطلبات المرفوضة';
+  static const String allRequests = 'جميع الطلبات';
+
+  // الحالة
+  static const String status = 'الحالة';
+  static const String available = 'متاح للعمل';
+  static const String busy = 'مشغول';
+  static const String offline = 'غير متصل';
+  static const String readyToWork = 'جاهز للعمل';
+  
+  // المحادثات
+  static const String startChat = 'بدء محادثة';
+  static const String typeMessage = 'اكتب رسالة...';
+  static const String sendMessage = 'إرسال';
+  static const String noChatsFound = 'لا توجد محادثات';
+  static const String contact = 'تواصل';
+  static const String chatWith = 'محادثة مع';
+  static const String noMessages = 'لا توجد رسائل بعد.';
+  static const String errorLoadingMessages = 'خطأ في تحميل الرسائل.';
+
+  // الإعدادات
+  static const String language = 'اللغة';
+  static const String notifications = 'التنبيهات';
+  static const String privacy = 'الخصوصية';
+  static const String about = 'حول التطبيق';
+  static const String version = 'الإصدار';
+  static const String myProfile = 'ملفي الشخصي';
+  static const String editProfile = 'تعديل الملف الشخصي';
+  static const String updateProfile = 'تحديث الملف الشخصي';
+  static const String myProfession = 'مهنتي';
+  static const String myWorkCities = 'مدن عملي';
+  static const String update = 'تحديث';
+  static const String addProfession = 'إضافة مهنة';
+  static const String selectYourProfession = 'اختر مهنتك';
+  static const String selectYourCities = 'اختر مدنك';
+  static const String saveChanges = 'حفظ التغييرات';
+  static const String profileUpdatedSuccessfully = 'تم تحديث الملف الشخصي بنجاح!';
+  static const String profileUpdateFailed = 'فشل تحديث الملف الشخصي.';
+  static const String chooseImage = 'اختر صورة';
+  static const String takePhoto = 'التقاط صورة';
+  static const String chooseFromGallery = 'الاختيار من المعرض';
+  static const String updatePhoto = 'تحديث الصورة';
+  static const String deleteAccount = 'حذف الحساب';
+  static const String confirmDeleteAccount = 'هل أنت متأكد أنك تريد حذف حسابك؟';
+  static const String yes = 'نعم';
+  static const String no = 'لا';
+  static const String accountDeleted = 'تم حذف الحساب بنجاح.';
+  static const String accountDeletionFailed = 'فشل حذف الحساب.';
+  static const String unknown = 'غير معروف';
+
+  // رسائل الخطأ
+  static const String emailRequired = 'البريد الإلكتروني مطلوب';
+  static const String passwordRequired = 'كلمة المرور مطلوبة';
+  static const String nameRequired = 'الاسم مطلوب';
+  static const String phoneRequired = 'رقم الهاتف مطلوب';
+  static const String professionRequired = 'الحرفة مطلوبة';
+  static const String workCitiesRequired = 'يجب اختيار مدينة واحدة على الأقل';
+  static const String invalidEmail = 'البريد الإلكتروني غير صحيح';
+  static const String passwordTooShort = 'كلمة المرور قصيرة جداً';
+  static const String passwordsDoNotMatch = 'كلمات المرور غير متطابقة';
+  static const String pleaseSelectUserType = 'الرجاء اختيار نوع المستخدم';
+  static const String pleaseSelectProfession = 'الرجاء اختيار المهنة';
+  static const String pleaseSelectAtLeastOneCity = 'الرجاء اختيار مدينة عمل واحدة على الأقل';
+  static const String registrationSuccessful = 'تم التسجيل بنجاح!';
+  static const String loginSuccessful = 'تم تسجيل الدخول بنجاح!';
+  static const String somethingWentWrong = 'حدث خطأ ما. الرجاء المحاولة مرة أخرى.';
+  static const String errorLoadingData = 'خطأ في تحميل البيانات.';
+  static const String noDataAvailable = 'لا توجد بيانات متاحة.';
+  static const String connectionError = 'خطأ في الاتصال بالإنترنت.';
+  static const String noInternet = 'لا يوجد اتصال بالإنترنت.';
+  static const String pleaseConnectToInternet = 'الرجاء الاتصال بالإنترنت والمحاولة مرة أخرى.';
+  static const String unknownError = 'خطأ غير معروف';
+
+  // الأذونات
+  static const String permissionDenied = 'تم رفض الإذن';
+  static const String permissionDeniedMessage = 'الرجاء منح الأذونات المطلوبة لاستخدام هذه الميزة.';
+  static const String locationPermissionDenied = 'تم رفض إذن الموقع';
+  static const String locationPermissionDeniedMessage = 'الرجاء منح إذن الوصول إلى الموقع للعثور على الحرفيين القريبين.';
+  static const String microphonePermissionDenied = 'تم رفض إذن الميكروفون';
+  static const String microphonePermissionDeniedMessage = 'الرجاء منح إذن الوصول إلى الميكروفون لتسجيل الرسائل الصوتية.';
+  static const String storagePermissionDenied = 'تم رفض إذن التخزين';
+  static const String storagePermissionDeniedMessage = 'الرجاء منح إذن الوصول إلى التخزين لحفظ الملفات.';
+  static const String cameraPermissionDenied = 'تم رفض إذن الكاميرا';
+  static const String cameraPermissionDeniedMessage = 'الرجاء منح إذن الوصول إلى الكاميرا لالتقاط الصور.';
+  static const String notificationPermissionDenied = 'تم رفض إذن الإشعارات';
+  static const String notificationPermissionDeniedMessage = 'الرجاء منح إذن الإشعارات لتلقي التنبيهات.';
+  static const String openSettings = 'فتح الإعدادات';
+
+  // الوقت
+  static const String now = 'الآن';
+  static const String minutesAgo = 'منذ دقائق';
+  static const String hoursAgo = 'منذ ساعات';
+  static const String daysAgo = 'منذ أيام';
+  static const String expiresIn = 'ينتهي خلال';
+  static const String expired = 'منتهي الصلاحية';
+
+  // البحث
+  static const String searching = 'جار البحث...';
+  static const String noResultsFound = 'لم يتم العثور على نتائج.';
+  static const String searchCraftsmen = 'البحث عن حرفيين';
+  static const String searchByProfessionOrCity = 'البحث بالمهنة أو المدينة...';
+
+  // معلومات إضافية
+  static const String rateApp = 'تقييم التطبيق';
+  static const String shareApp = 'مشاركة التطبيق';
+  static const String aboutUs = 'عنا';
+  static const String privacyPolicy = 'سياسة الخصوصية';
+  static const String termsAndConditions = 'الشروط والأحكام';
+  static const String developedBy = 'تم التطوير بواسطة';
+  static const String contactUs = 'اتصل بنا';
+  static const String feedback = 'ملاحظات';
+  static const String appearance = 'المظهر';
+  static const String lightTheme = 'الوضع الفاتح';
+  static const String darkTheme = 'الوضع الداكن';
+  static const String systemDefault = 'افتراضي النظام';
+  static const String theme = 'السمة';
+  static const String selectLanguage = 'اختر اللغة';
+  static const String arabic = 'العربية';
+  static const String english = 'الإنجليزية';
+  static const String french = 'الفرنسية';
+  static const String german = 'الألمانية';
+  static const String spanish = 'الإسبانية';
+  static const String italian = 'الإيطالية';
+  static const String turkish = 'التركية';
+  static const String chinese = 'الصينية';
+  static const String japanese = 'اليابانية';
+  static const String russian = 'الروسية';
+  static const String hindi = 'الهندية';
+  static const String portuguese = 'البرتغالية';
+  static const String dutch = 'الهولندية';
+  static const String swedish = 'السويدية';
+  static const String norwegian = 'النرويجية';
+  static const String danish = 'الدنماركية';
+  static const String finnish = 'الفنلندية';
+  static const String greek = 'اليونانية';
+  static const String polish = 'البولندية';
+  static const String czech = 'التشيكية';
+  static const String hungarian = 'المجرية';
+  static const String romanian = 'الرومانية';
+  static const String indonesian = 'الإندونيسية';
+  static const String malay = 'المالايالامية';
+  static const String thai = 'التايلاندية';
+  static const String vietnamese = 'الفيتنامية';
+  static const String korean = 'الكورية';
+  static const String hebrew = 'العبرية';
+  static const String persian = 'الفارسية';
+  static const String urdu = 'الأردية';
+  static const String bengali = 'البنغالية';
+  static const String gujarati = 'الغوجاراتية';
+  static const String kannada = 'الكانادا';
+  static const String malayalam = 'المالايالامية';
+  static const String marathi = 'الماراثية';
+  static const String punjabi = 'البنجابية';
+  static const String tamil = 'التاميلية';
+  static const String telugu = 'التيلوجوية';
+  static const String ukrainian = 'الأوكرانية';
+  static const String bulgarian = 'البلغارية';
+  static const String croatian = 'الكرواتية';
+  static const String serbian = 'الصربية';
+  static const String slovak = 'السلوفاكية';
+  static const String slovenian = 'السلوفينية';
+  static const String lithuanian = 'الليتوانية';
+  static const String latvian = 'اللاتفية';
+  static const String estonian = 'الإستونية';
+  static const String albanian = 'الألبانية';
+  static const String macedonian = 'المقدونية';
+  static const String bosnian = 'البوسنية';
+  static const String montenegrin = 'الجبل الأسود';
+  static const String icelandic = 'الأيسلندية';
+  static const String irish = 'الأيرلندية';
+  static const String welsh = 'الويلزية';
+  static const String scottishGaelic = 'الغيلية الاسكتلندية';
+  static const String maltese = 'المالطية';
+  static const String luxembourgish = 'اللوكسمبورغية';
+  static const String basque = 'الباسكية';
+  static const String catalan = 'الكتالونية';
+  static const String galician = 'الجاليكية';
+  static const String breton = 'البريتونية';
+  static const String corsican = 'الكورسيكية';
+  static const String frisian = 'الفريزية';
+  static const String haitianCreole = 'الكريولية الهايتية';
+  static const String latin = 'اللاتينية';
+  static const String esperanto = 'الإسبرانتو';
+  static const String ido = 'الإيدو';
+  static const String interlingua = 'الإنترلينجوا';
+  static const String volapuk = 'الفولابوك';
+  static const String klingon = 'الكلينغونية';
+  static const String elvish = 'الإلفية';
+  static const String dothraki = 'الدوثراكية';
+  static const String valyrian = 'الفاليرية';
+  static const String naVi = 'النافية';
+  static const String tokiPona = 'التوكي بونا';
+  static const String lojban = 'اللوجبان';
+  static const String tokiMa = 'التوكي ما';
+  static const String tokiPonaOld = 'التوكي بونا القديمة';
+  static const String tokiPonaNew = 'التوكي بونا الجديدة';
+  static const String tokiPonaSimplified = 'التوكي بونا المبسطة';
+  static const String tokiPonaExtended = 'التوكي بونا الموسعة';
+  static const String tokiPonaAdvanced = 'التوكي بونا المتقدمة';
+  static const String tokiPonaExpert = 'التوكي بونا الخبيرة';
+  static const String tokiPonaMaster = 'التوكي بونا المتقنة';
+  static const String tokiPonaGrandmaster = 'التوكي بونا الأستاذة الكبرى';
+  static const String tokiPonaLegend = 'التوكي بونا الأسطورية';
+}
+
+
