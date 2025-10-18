@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart'; // لم نعد نستخدمه
 import '../../constants/app_colors.dart';
-import '../../constants/app_strings.dart';
 import 'home_screen.dart';
 import 'requests_screen.dart';
 import 'chats_screen.dart';
@@ -9,7 +7,7 @@ import 'available_craftsmen_screen.dart';
 import 'profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -18,16 +16,13 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  // --- START OF CORRECTION ---
-  // Remove 'const' from widgets that are not constant anymore
   final List<Widget> _screens = [
     const HomeScreen(),
-    RequestsScreen(), // Removed const
-    ChatsScreen(), // Removed const
+    const RequestsScreen(),
+    const ChatsScreen(),
     const AvailableCraftsmenScreen(),
-    const ProfileScreen(), // Assuming this is still a const widget
+    const ProfileScreen(),
   ];
-  // --- END OF CORRECTION ---
 
   @override
   Widget build(BuildContext context) {
@@ -52,27 +47,27 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
-            label: AppStrings.home,
+            label: 'الرئيسية',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.work_outline),
             activeIcon: Icon(Icons.work),
-            label: AppStrings.requests,
+            label: 'الطلبات',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble_outline),
             activeIcon: Icon(Icons.chat_bubble),
-            label: AppStrings.chats,
+            label: 'المحادثات',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people_outline),
             activeIcon: Icon(Icons.people),
-            label: AppStrings.availableCraftsmen,
+            label: 'الحرفيون',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: AppStrings.profile,
+            label: 'الملف الشخصي',
           ),
         ],
       ),
