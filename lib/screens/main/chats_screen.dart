@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // <-- تم التغيير
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/app_colors.dart';
 import '../../constants/app_strings.dart';
 import '../../models/chat_model.dart';
@@ -7,7 +7,6 @@ import '../../providers/auth_provider.dart';
 import '../../providers/chat_provider.dart';
 import '../chat/chat_detail_screen.dart';
 
-// تم تحويله إلى ConsumerWidget
 class ChatsScreen extends ConsumerWidget {
   const ChatsScreen({super.key});
 
@@ -16,19 +15,18 @@ class ChatsScreen extends ConsumerWidget {
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 1) {
-      return AppStrings.now;
+      return 'الآن';
     } else if (difference.inHours < 1) {
-      return '${difference.inMinutes} ${AppStrings.minutesAgo}';
+      return '${difference.inMinutes} دقائق';
     } else if (difference.inDays < 1) {
-      return '${difference.inHours} ${AppStrings.hoursAgo}';
+      return '${difference.inHours} ساعات';
     } else {
-      return '${difference.inDays} ${AppStrings.daysAgo}';
+      return '${difference.inDays} أيام';
     }
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) { // <-- تم إضافة WidgetRef
-    // استخدام ref.watch من Riverpod
+  Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final user = authState.user;
 
@@ -40,14 +38,13 @@ class ChatsScreen extends ConsumerWidget {
       );
     }
 
-    // استخدام ref.watch من Riverpod
     final chatsAsync = ref.watch(userChatsProvider(user.uid));
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.chats), // <-- تم إضافة const
-        backgroundColor: AppColors.primaryColor, // <-- تم إصلاح اللون
-        foregroundColor: AppColors.textOnPrimaryColor, // <-- تم إصلاح اللون
+        title: const Text('المحادثات'),
+        backgroundColor: AppColors.primaryColor,
+        foregroundColor: AppColors.textOnPrimaryColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -67,14 +64,14 @@ class ChatsScreen extends ConsumerWidget {
                   Icon(
                     Icons.chat_bubble_outline,
                     size: 64,
-                    color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
+                    color: AppColors.textSecondaryColor,
                   ),
                   SizedBox(height: 16),
                   Text(
-                    AppStrings.noChatsFound,
+                    'لا توجد محادثات',
                     style: TextStyle(
                       fontSize: 18,
-                      color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
+                      color: AppColors.textSecondaryColor,
                     ),
                   ),
                   SizedBox(height: 8),
@@ -82,7 +79,7 @@ class ChatsScreen extends ConsumerWidget {
                     'ابدأ محادثة جديدة من خلال الرد على طلب عمل',
                     style: TextStyle(
                       fontSize: 14,
-                      color: AppColors.hintTextColor, // <-- تم إصلاح اللون
+                      color: AppColors.textSecondaryColor,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -114,14 +111,14 @@ class ChatsScreen extends ConsumerWidget {
               const Icon(
                 Icons.error_outline,
                 size: 64,
-                color: AppColors.errorColor, // <-- تم إصلاح اللون
+                color: AppColors.errorColor,
               ),
               const SizedBox(height: 16),
-              const Text( // <-- تم إضافة const
+              const Text(
                 'خطأ في تحميل المحادثات',
                 style: TextStyle(
                   fontSize: 18,
-                  color: AppColors.errorColor, // <-- تم إصلاح اللون
+                  color: AppColors.errorColor,
                 ),
               ),
               const SizedBox(height: 16),
@@ -129,7 +126,7 @@ class ChatsScreen extends ConsumerWidget {
                 onPressed: () {
                   ref.invalidate(userChatsProvider(user.uid));
                 },
-                child: const Text(AppStrings.retry), // <-- تم إضافة const
+                child: const Text('إعادة المحاولة'),
               ),
             ],
           ),
@@ -139,18 +136,17 @@ class ChatsScreen extends ConsumerWidget {
   }
 
   Widget _buildChatTile(BuildContext context, ChatModel chat, String currentUserId) {
-    // الحصول على معلومات الطرف الآخر في المحادثة
     final otherUserId = chat.participants.firstWhere((id) => id != currentUserId, orElse: () => '');
     final otherUserName = chat.participantNames[otherUserId] ?? 'مستخدم';
     final isLastMessageFromMe = chat.lastMessageSenderId == currentUserId;
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: AppColors.primaryColor, // <-- تم إصلاح اللون
+        backgroundColor: AppColors.primaryColor,
         child: Text(
           otherUserName.isNotEmpty ? otherUserName.substring(0, 1).toUpperCase() : '?',
           style: const TextStyle(
-            color: AppColors.textOnPrimaryColor, // <-- تم إصلاح اللون
+            color: AppColors.textOnPrimaryColor,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -159,7 +155,7 @@ class ChatsScreen extends ConsumerWidget {
         otherUserName,
         style: const TextStyle(
           fontWeight: FontWeight.w600,
-          color: AppColors.textPrimaryColor, // <-- تم إصلاح اللون
+          color: AppColors.textPrimaryColor,
         ),
       ),
       subtitle: Row(
@@ -168,7 +164,7 @@ class ChatsScreen extends ConsumerWidget {
             const Icon(
               Icons.done,
               size: 16,
-              color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
+              color: AppColors.textSecondaryColor,
             ),
             const SizedBox(width: 4),
           ],
@@ -178,7 +174,7 @@ class ChatsScreen extends ConsumerWidget {
                   ? 'لا توجد رسائل'
                   : chat.lastMessageContent,
               style: const TextStyle(
-                color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
+                color: AppColors.textSecondaryColor,
                 fontSize: 14,
               ),
               maxLines: 1,
@@ -195,11 +191,10 @@ class ChatsScreen extends ConsumerWidget {
             _formatTimeAgo(chat.lastMessageTime),
             style: const TextStyle(
               fontSize: 12,
-              color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
+              color: AppColors.textSecondaryColor,
             ),
           ),
           const SizedBox(height: 4),
-          // TODO: Add unread message count indicator
         ],
       ),
       onTap: () {
@@ -207,7 +202,7 @@ class ChatsScreen extends ConsumerWidget {
           MaterialPageRoute(
             builder: (context) => ChatDetailScreen(
               chatId: chat.id,
-              otherUserId: otherUserId, // <-- تم إضافة otherUserId
+              otherUserId: otherUserId,
             ),
           ),
         );
