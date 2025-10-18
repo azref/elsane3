@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/app_colors.dart';
-import '../../constants/app_strings.dart';
-import '../../providers/auth_provider.dart';
 import '../../screens/auth/login_screen.dart';
 import '../../models/user_model.dart';
 
@@ -16,7 +14,7 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.profile),
+        title: const Text('الملف الشخصي'),
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.textOnPrimary,
       ),
@@ -69,17 +67,17 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  _buildProfileInfoRow(AppStrings.name, currentUser.name),
-                  _buildProfileInfoRow(AppStrings.email, currentUser.email),
-                  _buildProfileInfoRow(AppStrings.phone, currentUser.phone),
-                  _buildProfileInfoRow(AppStrings.userType, currentUser.userType == UserType.craftsman ? AppStrings.craftsman : AppStrings.client),
+                  _buildProfileInfoRow('الاسم', currentUser.name),
+                  _buildProfileInfoRow('البريد الإلكتروني', currentUser.email),
+                  _buildProfileInfoRow('الهاتف', currentUser.phone),
+                  _buildProfileInfoRow('نوع المستخدم', currentUser.userType == UserType.craftsman ? 'حرفي' : 'عميل'),
                   if (currentUser.userType == UserType.craftsman) ...[
-                    _buildProfileInfoRow(AppStrings.profession, currentUser.profession ?? 'غير محدد'),
-                    _buildProfileInfoRow(AppStrings.experienceYears, '${currentUser.experienceYears ?? 0} سنوات'),
-                    _buildProfileInfoRow(AppStrings.workCities, currentUser.workCities.join(', ')),
+                    _buildProfileInfoRow('المهنة', currentUser.profession ?? 'غير محدد'),
+                    _buildProfileInfoRow('سنوات الخبرة', '${currentUser.experienceYears ?? 0} سنوات'),
+                    _buildProfileInfoRow('مدن العمل', currentUser.workCities.join(', ')),
                   ],
-                  _buildProfileInfoRow(AppStrings.country, currentUser.country),
-                  _buildProfileInfoRow(AppStrings.createdAt, '${currentUser.createdAt.toLocal().year}-${currentUser.createdAt.toLocal().month}-${currentUser.createdAt.toLocal().day}'),
+                  _buildProfileInfoRow('البلد', currentUser.country),
+                  _buildProfileInfoRow('تاريخ الإنشاء', '${currentUser.createdAt.toLocal().year}-${currentUser.createdAt.toLocal().month}-${currentUser.createdAt.toLocal().day}'),
                   const SizedBox(height: 30),
                   Center(
                     child: ElevatedButton.icon(
@@ -92,7 +90,7 @@ class ProfileScreen extends ConsumerWidget {
                         }
                       },
                       icon: const Icon(Icons.logout),
-                      label: const Text(AppStrings.logout),
+                      label: const Text('تسجيل الخروج'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.error,
                         foregroundColor: AppColors.textOnPrimary,
