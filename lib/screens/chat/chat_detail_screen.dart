@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // 1. استيراد Riverpod
 import 'package:audioplayers/audioplayers.dart';
 import '../../constants/app_colors.dart';
 import '../../constants/app_strings.dart';
 import '../../models/message_model.dart';
-import '../../providers/auth_provider.dart';
-import '../../providers/chat_provider.dart';
+import '../../providers/auth_provider.dart'; // سيبقى هذا لاستخدامه مع Riverpod
+import '../../providers/chat_provider.dart'; // سيبقى هذا لاستخدامه مع Riverpod
 
-class ChatDetailScreen extends StatefulWidget {
+// 2. تحويل الويدجت إلى ConsumerStatefulWidget
+class ChatDetailScreen extends ConsumerStatefulWidget {
   final String chatId;
   final String otherUserName;
 
@@ -18,10 +19,11 @@ class ChatDetailScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ChatDetailScreen> createState() => _ChatDetailScreenState();
+  // 3. تغيير State إلى ConsumerState
+  _ChatDetailScreenState createState() => _ChatDetailScreenState();
 }
 
-class _ChatDetailScreenState extends State<ChatDetailScreen> {
+class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
   final AudioPlayer _audioPlayer = AudioPlayer();
   String? _currentlyPlayingAudioUrl;
@@ -34,16 +36,18 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 
   Future<void> _sendMessage() async {
-    final currentUser = Provider.of<AuthProvider>(context, listen: false).user;
+    // 4. قراءة البروفايدر باستخدام 'ref'
+    final currentUser = ref.read(authProvider).user;
     if (currentUser == null || _messageController.text.trim().isEmpty) return;
 
-    final chatService = Provider.of<ChatProvider>(context, listen: false);
+    final chatService = ref.read(chatProvider);
     // TODO: Determine receiverId based on chat participants
     final receiverId = ''; // Placeholder
 
     await chatService.sendMessage(
       chatId: widget.chatId,
-      senderId: currentUser.id,
+      // 5. استخدام currentUser.uid بدلاً من .id
+      senderId: currentUser.uid,
       receiverId: receiverId, // This needs to be correctly determined
       content: _messageController.text.trim(),
       type: MessageType.text,
@@ -66,19 +70,23 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('خطأ في تشغيل الصوت: $e'),
-          backgroundColor: AppColors.error,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('خطأ في تشغيل الصوت: $e'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = Provider.of<AuthProvider>(context).user;
-    final messagesAsync = Provider.of<ChatProvider>(context).getChatMessages(chatId);
+    // 6. قراءة البروفايدر باستخدام 'ref'
+    final currentUser = ref.watch(authProvider).user;
+    // 7. استخدام ref.watch لجلب الرسائل
+    final messagesAsync = ref.watch(chatMessagesProvider(widget.chatId));
 
     return Scaffold(
       appBar: AppBar(
@@ -97,7 +105,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    final isMe = message.senderId == currentUser?.id;
+                    // 8. استخدام currentUser.uid بدلاً من .id
+                    final isMe = message.senderId == currentUser?.uid;
                     return _buildMessageBubble(message, isMe);
                   },
                 );
@@ -224,4 +233,3 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     );
   }
 }
-

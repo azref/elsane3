@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart'; // لم نعد نستخدمه
 import '../../constants/app_colors.dart';
 import '../../constants/app_strings.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../models/user_model.dart';
-import '../../models/profession_model.dart';
+import '../../models/profession_model.dart'; // تأكد من أن هذا الاستيراد موجود
 import '../main/main_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -70,10 +70,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  List<ProfessionModel> get _availableProfessions {
+  // -- Start of Correction --
+  List<Profession> get _availableProfessions {
     final professionsData = ProfessionsData();
+    // ملاحظة: دالة getProfessionsByDialect ترجع List<Profession> وليس List<ProfessionModel>
     return professionsData.getProfessionsByDialect(_selectedCountry);
   }
+  // -- End of Correction --
 
   List<String> get _availableCities {
     return _citiesByCountry[_selectedCountry] ?? [];
@@ -467,4 +470,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-
