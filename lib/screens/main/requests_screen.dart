@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // <-- تم التغيير
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:alsana_alharfiyin/constants/app_colors.dart';
 import 'package:alsana_alharfiyin/constants/app_strings.dart';
@@ -7,9 +7,8 @@ import 'package:alsana_alharfiyin/models/request_model.dart';
 import 'package:alsana_alharfiyin/models/user_model.dart';
 import 'package:alsana_alharfiyin/providers/auth_provider.dart';
 import 'package:alsana_alharfiyin/providers/request_provider.dart';
-import 'package:alsana_alharfiyin/widgets/custom_button.dart'; // <-- تم إضافة import
+import 'package:alsana_alharfiyin/widgets/custom_button.dart';
 
-// تم تحويله إلى ConsumerStatefulWidget
 class RequestsScreen extends ConsumerStatefulWidget {
   const RequestsScreen({super.key});
 
@@ -17,7 +16,6 @@ class RequestsScreen extends ConsumerStatefulWidget {
   ConsumerState<RequestsScreen> createState() => _RequestsScreenState();
 }
 
-// تم تحويله إلى ConsumerState
 class _RequestsScreenState extends ConsumerState<RequestsScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   String? _currentlyPlayingId;
@@ -45,8 +43,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar( // <-- تم إصلاح الخطأ هنا
-            content: Text(AppStrings.audioPlaybackError), // <-- تم إصلاح الخطأ هنا
+          SnackBar(
+            content: const Text('خطأ في تشغيل الصوت'),
             backgroundColor: AppColors.errorColor,
           ),
         );
@@ -59,32 +57,31 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
     final difference = now.difference(dateTime);
 
     if (difference.inMinutes < 1) {
-      return AppStrings.now;
+      return 'الآن';
     } else if (difference.inHours < 1) {
-      return '${difference.inMinutes} ${AppStrings.minutesAgo}';
+      return '${difference.inMinutes} دقائق';
     } else if (difference.inDays < 1) {
-      return '${difference.inHours} ${AppStrings.hoursAgo}';
+      return '${difference.inHours} ساعات';
     } else {
-      return '${difference.inDays} ${AppStrings.daysAgo}';
+      return '${difference.inDays} أيام';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // استخدام ref.watch من Riverpod بدلاً من Provider.of
     final authState = ref.watch(authProvider);
     final user = authState.user;
 
     if (user == null || user.userType != UserType.craftsman) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text(AppStrings.requests), // <-- تم إضافة const
+          title: const Text('الطلبات'),
           backgroundColor: AppColors.primaryColor,
           foregroundColor: AppColors.textOnPrimaryColor,
         ),
         body: Center(
           child: Text(
-            user == null ? AppStrings.pleaseLogin : AppStrings.craftsmanOnlySection,
+            user == null ? 'الرجاء تسجيل الدخول' : 'هذا القسم للحرفيين فقط',
             style: const TextStyle(
               fontSize: 18,
               color: AppColors.textSecondaryColor,
@@ -104,7 +101,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.requests), // <-- تم إضافة const
+        title: const Text('الطلبات'),
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.textOnPrimaryColor,
         actions: [
@@ -129,19 +126,19 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
                     color: AppColors.textSecondaryColor,
                   ),
                   const SizedBox(height: 16),
-                  const Text( // <-- تم إضافة const
-                    AppStrings.noRequestsFound,
+                  const Text(
+                    'لا توجد طلبات',
                     style: TextStyle(
                       fontSize: 18,
                       color: AppColors.textSecondaryColor,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text( // <-- تم إضافة const
-                    AppStrings.ensureAvailabilityStatus,
+                  Text(
+                    'تأكد من تحديث حالة التوفر',
                     style: TextStyle(
                       fontSize: 14,
-                      color: AppColors.hintTextColor,
+                      color: AppColors.textSecondaryColor,
                     ),
                   ),
                 ],
@@ -151,7 +148,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
 
           return RefreshIndicator(
             onRefresh: () async {
-              ref.invalidate(craftsmanRequestsProvider( // <-- تم إصلاح الخطأ هنا
+              ref.invalidate(craftsmanRequestsProvider(
                 CraftsmanRequestParams(
                   professionConceptKey: user.professionConceptKey ?? '',
                   workCities: user.workCities ?? [],
@@ -182,8 +179,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
                 color: AppColors.errorColor,
               ),
               const SizedBox(height: 16),
-              const Text( // <-- تم إضافة const
-                AppStrings.errorLoadingRequests,
+              const Text(
+                'خطأ في تحميل الطلبات',
                 style: TextStyle(
                   fontSize: 18,
                   color: AppColors.errorColor,
@@ -200,9 +197,9 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
               ),
               const SizedBox(height: 16),
               CustomButton(
-                text: AppStrings.retry, // <-- تم إصلاح الخطأ هنا
+                text: 'إعادة المحاولة',
                 onPressed: () {
-                   ref.invalidate(craftsmanRequestsProvider( // <-- تم إصلاح الخطأ هنا
+                  ref.invalidate(craftsmanRequestsProvider(
                     CraftsmanRequestParams(
                       professionConceptKey: user.professionConceptKey ?? '',
                       workCities: user.workCities ?? [],
@@ -232,11 +229,11 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
           color: isExpired ? AppColors.errorColor : AppColors.borderColor,
           width: isExpired ? 2 : 1,
         ),
-        boxShadow: const [ // <-- تم إضافة const
+        boxShadow: [
           BoxShadow(
             color: AppColors.shadowColor,
             blurRadius: 4,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -253,7 +250,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  request.professionConceptKey, // <-- تم إصلاح الخطأ هنا
+                  request.professionConceptKey,
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -306,7 +303,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                request.city, // <-- تم إصلاح الخطأ هنا
+                request.city,
                 style: const TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondaryColor,
@@ -344,7 +341,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
                 const SizedBox(width: 12),
                 const Expanded(
                   child: Text(
-                    AppStrings.voiceMessage,
+                    'رسالة صوتية',
                     style: TextStyle(
                       fontSize: 14,
                       color: AppColors.textPrimaryColor,
@@ -393,8 +390,8 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
                 ),
                 child: Text(
                   isExpired
-                      ? AppStrings.expired
-                      : '${AppStrings.expiresIn} ${timeRemaining.inHours}س',
+                      ? 'منتهي'
+                      : 'ينتهي في ${timeRemaining.inHours}س',
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -406,7 +403,7 @@ class _RequestsScreenState extends ConsumerState<RequestsScreen> {
               // Contact Button
               if (!isExpired)
                 CustomButton(
-                  text: AppStrings.contact, // <-- تم إصلاح الخطأ هنا
+                  text: 'تواصل',
                   onPressed: () {
                     // TODO: Start chat with client
                   },
