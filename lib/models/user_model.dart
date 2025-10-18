@@ -49,7 +49,8 @@ class UserModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
+  // تم تغيير اسم الدالة من toMap إلى toFirestore
+  Map<String, dynamic> toFirestore() {
     return {
       'email': email,
       'displayName': displayName,
@@ -86,5 +87,3 @@ class UserModel {
     );
   }
 }
-
-
