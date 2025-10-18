@@ -42,8 +42,9 @@ class AuthService {
 
       if (userCredential.user != null) {
         // حفظ بيانات المستخدم في Firestore
+        // --- START OF CORRECTION ---
         UserModel newUser = UserModel(
-          id: userCredential.user!.uid,
+          uid: userCredential.user!.uid, // Corrected: use 'uid'
           name: name,
           phone: phone,
           email: email,
@@ -56,7 +57,9 @@ class AuthService {
           createdAt: DateTime.now(),
           lastSeen: DateTime.now(),
         );
-        await _firestore.collection('users').doc(newUser.id).set(newUser.toFirestore());
+        // Corrected: use 'uid' and 'toMap()'
+        await _firestore.collection('users').doc(newUser.uid).set(newUser.toMap());
+        // --- END OF CORRECTION ---
       }
       return userCredential;
     } on FirebaseAuthException catch (e) {
@@ -80,7 +83,8 @@ class AuthService {
     try {
       DocumentSnapshot doc = await _firestore.collection('users').doc(uid).get();
       if (doc.exists) {
-        return UserModel.fromFirestore(doc);
+        // Corrected: use 'fromMap()'
+        return UserModel.fromMap(doc.data() as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -98,5 +102,3 @@ class AuthService {
     }
   }
 }
-
-

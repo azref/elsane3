@@ -1,141 +1,108 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:alsana_alharfiyin/constants/app_colors.dart';
-import 'package:alsana_alharfiyin/constants/app_strings.dart';
-import 'package:alsana_alharfiyin/models/profession_model.dart';
-import 'package:alsana_alharfiyin/models/user_model.dart'; // Added UserType import
-import 'package:alsana_alharfiyin/providers/auth_provider.dart';
-import 'package:alsana_alharfiyin/providers/profession_provider.dart'; // Added profession_provider import
-import 'package:alsana_alharfiyin/widgets/custom_button.dart';
-import 'package:alsana_alharfiyin/screens/auth/login_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../constants/app_colors.dart';
+import '../../constants/app_strings.dart';
+import '../../providers/auth_provider.dart';
+import '../../screens/auth/login_screen.dart';
+import '../../models/user_model.dart'; // تم إضافة هذا الاستيراد لـ UserType
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends ConsumerWidget { // تم التغيير إلى ConsumerWidget
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final authState = Provider.of<AuthProvider>(context);
-    final user = authState.user; // Access user from authState
-    final professionsData = Provider.of<ProfessionProvider>(context); // Access professionsData
+  Widget build(BuildContext context, WidgetRef ref) { // تم إضافة WidgetRef ref
+    // مراقبة authProvider للتفاعل مع التغييرات في حالة المصادقة
+    final authService = ref.watch(authProvider); // استخدام ref.watch
+    final currentUser = authService.user; // افتراض أن authProvider يكشف عن UserModel مباشرة
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        title: Text(AppStrings.profile),
-        backgroundColor: AppColors.primaryColor,
-        foregroundColor: AppColors.textOnPrimaryColor,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              // TODO: Navigate to settings screen
-            },
-          ),
-        ],
+        title: const Text(AppStrings.profile),
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.textOnPrimary,
       ),
-      body: user == null
-          ? const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryColor),
+      body: currentUser == null
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'الرجاء تسجيل الدخول لعرض ملفك الشخصي.',
+                    style: TextStyle(fontSize: 18, color: AppColors.textPrimary),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.textOnPrimary,
+                      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      'تسجيل الدخول',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
             )
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Profile Picture and Name
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: AppColors.primaryLightColor,
-                    child: Text(
-                      user.displayName != null && user.displayName!.isNotEmpty ? user.displayName![0].toUpperCase() : 
-                      user.email.isNotEmpty ? user.email[0].toUpperCase() : 
-                      'U', // Default to 'U' if no name or email
-                      style: const TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textOnPrimaryColor,
+                  Center(
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundColor: AppColors.primaryLight,
+                      child: Icon(
+                        currentUser.userType == UserType.craftsman ? Icons.construction : Icons.person,
+                        size: 60,
+                        color: AppColors.textOnPrimary,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    user.displayName ?? AppStrings.unknownUser,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    user.email,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: AppColors.textSecondaryColor,
-                    ),
-                  ),
-                  // Phone number is not in UserModel, so commenting out or adding a placeholder
-                  // const SizedBox(height: 8),
-                  // Text(
-                  //   user.phone ?? '', // Assuming phone might be null
-                  //   style: const TextStyle(
-                  //     fontSize: 16,
-                  //     color: AppColors.textSecondaryColor,
-                  //   ),
-                  // ),
-                  const SizedBox(height: 24),
-
-                  // User Type and Details
-                  _buildInfoCard(
-                    title: AppStrings.accountType,
-                    value: user.userType == UserType.craftsman
-                        ? AppStrings.craftsman
-                        : AppStrings.client,
-                    icon: user.userType == UserType.craftsman
-                        ? Icons.handyman
-                        : Icons.person,
-                  ),
-                  if (user.userType == UserType.craftsman) ...[
-                    const SizedBox(height: 16),
-                    _buildInfoCard(
-                      title: AppStrings.profession,
-                      value: user.professionConceptKey != null
-                          ? professionsData.getProfessionByConceptKey(user.professionConceptKey!)?.getNameByDialect(user.dialect ?? 'AR') ?? AppStrings.notSpecified
-                          : AppStrings.notSpecified,
-                      icon: Icons.work,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildInfoCard(
-                      title: AppStrings.workCities,
-                      value: user.workCities != null && user.workCities!.isNotEmpty
-                          ? user.workCities!.join(', ')
-                          : AppStrings.notSpecified,
-                      icon: Icons.location_city,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildInfoCard(
-                      title: AppStrings.status,
-                      value: user.isAvailable ? AppStrings.availableForWork : AppStrings.notAvailableForWork,
-                      icon: user.isAvailable ? Icons.check_circle : Icons.cancel,
-                      valueColor: user.isAvailable ? AppColors.successColor : AppColors.errorColor,
-                    ),
+                  const SizedBox(height: 20),
+                  _buildProfileInfoRow(AppStrings.name, currentUser.name),
+                  _buildProfileInfoRow(AppStrings.email, currentUser.email),
+                  _buildProfileInfoRow(AppStrings.phone, currentUser.phone),
+                  _buildProfileInfoRow(AppStrings.userType, currentUser.userType == UserType.craftsman ? AppStrings.craftsman : AppStrings.client),
+                  if (currentUser.userType == UserType.craftsman) ...[
+                    _buildProfileInfoRow(AppStrings.profession, currentUser.profession ?? 'غير محدد'),
+                    _buildProfileInfoRow(AppStrings.experienceYears, '${currentUser.experienceYears ?? 0} سنوات'),
+                    _buildProfileInfoRow(AppStrings.workCities, currentUser.workCities.join(', ')),
                   ],
-                  const SizedBox(height: 24),
-
-                  // Logout Button
-                  CustomButton(
-                    label: AppStrings.logout,
-                    onPressed: () async {
-                      await // // // ref.read(authProvider.notifier).signOut();
-                      if (context.mounted) {
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
-                          (Route<dynamic> route) => false,
-                        );
-                      }
-                    },
-                    isOutlined: true,
-                    icon: Icons.logout,
+                  _buildProfileInfoRow(AppStrings.country, currentUser.country),
+                  _buildProfileInfoRow(AppStrings.createdAt, '${currentUser.createdAt.toLocal().year}-${currentUser.createdAt.toLocal().month}-${currentUser.createdAt.toLocal().day}'),
+                  const SizedBox(height: 30),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        await authService.signOut();
+                        if (context.mounted) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.logout),
+                      label: const Text(AppStrings.logout),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.error,
+                        foregroundColor: AppColors.textOnPrimary,
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -143,52 +110,30 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard({
-    required String title,
-    required String value,
-    required IconData icon,
-    Color? valueColor,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackgroundColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderColor),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor,
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
+  Widget _buildProfileInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppColors.primaryColor, size: 24),
-          const SizedBox(width: 16),
+          SizedBox(
+            width: 100,
+            child: Text(
+              '$label:',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondaryColor,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: valueColor ?? AppColors.textPrimaryColor,
-                  ),
-                ),
-              ],
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+                color: AppColors.textSecondary,
+              ),
             ),
           ),
         ],
@@ -196,5 +141,3 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-
-

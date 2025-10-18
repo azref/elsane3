@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart'; // لم نعد نستخدمه
 import '../../constants/app_colors.dart';
 import '../../constants/app_strings.dart';
 import 'home_screen.dart';
@@ -18,13 +18,16 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
+  // --- START OF CORRECTION ---
+  // Remove 'const' from widgets that are not constant anymore
   final List<Widget> _screens = [
     const HomeScreen(),
-    const RequestsScreen(),
-    const ChatsScreen(),
+    RequestsScreen(), // Removed const
+    ChatsScreen(), // Removed const
     const AvailableCraftsmenScreen(),
-    const ProfileScreen(),
+    const ProfileScreen(), // Assuming this is still a const widget
   ];
+  // --- END OF CORRECTION ---
 
   @override
   Widget build(BuildContext context) {
@@ -76,4 +79,3 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-

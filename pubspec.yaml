@@ -20,7 +20,7 @@ dependencies:
   firebase_crashlytics: ^3.4.9
   
   # State Management
-  provider: ^6.1.1
+  flutter_riverpod: ^2.5.1 # تم استبدال provider بـ flutter_riverpod
   
   # UI Components
   cupertino_icons: ^1.0.6
@@ -76,4 +76,3 @@ flutter:
         - asset: assets/fonts/Cairo-Regular.ttf
         - asset: assets/fonts/Cairo-Bold.ttf
           weight: 700
-

@@ -8,82 +8,115 @@ enum UserType {
 
 class UserModel {
   final String uid;
+  final String name; // تم إضافة هذا الحقل
   final String email;
-  final String? displayName;
-  final String? photoUrl;
+  final String phone; // تم إضافة هذا الحقل
   final UserType userType;
-  final String? professionConceptKey;
-  final List<String>? workCities;
+  final String country; // تم إضافة هذا الحقل
   final String? dialect;
-  final bool isAvailable;
+  final String? profession; // تم تغيير الاسم من professionConceptKey
+  final int? experienceYears; // تم إضافة هذا الحقل
+  final List<String> workCities; // تم تغييرها لتكون غير قابلة للقيم الفارغة
+  final String? profilePictureUrl; // تم إضافة هذا الحقل
+  final bool isOnline; // تم إضافة هذا الحقل
+  final DateTime createdAt;
+  final DateTime lastSeen;
 
   UserModel({
     required this.uid,
+    required this.name,
     required this.email,
-    this.displayName,
-    this.photoUrl,
+    required this.phone,
     required this.userType,
-    this.professionConceptKey,
-    this.workCities,
+    required this.country,
     this.dialect,
-    this.isAvailable = false,
+    this.profession,
+    this.experienceYears,
+    required this.workCities,
+    this.profilePictureUrl,
+    this.isOnline = false,
+    required this.createdAt,
+    required this.lastSeen,
   });
 
-  factory UserModel.fromFirestore(DocumentSnapshot doc) {
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+  factory UserModel.fromMap(Map<String, dynamic> data) {
     return UserModel(
-      uid: doc.id,
+      uid: data['uid'] ?? '',
+      name: data['name'] ?? '',
       email: data['email'] ?? '',
-      displayName: data['displayName'] ?? '',
-      photoUrl: data['photoUrl'] ?? '',
+      phone: data['phone'] ?? '',
       userType: UserType.values.firstWhere(
         (e) => e.toString() == 'UserType.' + (data['userType'] ?? 'client'),
         orElse: () => UserType.client,
       ),
-      professionConceptKey: data['professionConceptKey'],
-      workCities: data['workCities'] != null
-          ? List<String>.from(data['workCities'])
-          : null,
+      country: data['country'] ?? '',
       dialect: data['dialect'],
-      isAvailable: data['isAvailable'] ?? false,
+      profession: data['profession'], // تم التغيير هنا
+      experienceYears: data['experienceYears'],
+      workCities: List<String>.from(data['workCities'] ?? []),
+      profilePictureUrl: data['profilePictureUrl'],
+      isOnline: data['isOnline'] ?? false,
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      lastSeen: (data['lastSeen'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
-  // تم تغيير اسم الدالة من toMap إلى toFirestore
-  Map<String, dynamic> toFirestore() {
+  // دالة toMap متوافقة مع Firestore
+  Map<String, dynamic> toMap() {
     return {
+      'uid': uid,
+      'name': name,
       'email': email,
-      'displayName': displayName,
-      'photoUrl': photoUrl,
+      'phone': phone,
       'userType': userType.toString().split('.').last,
-      'professionConceptKey': professionConceptKey,
-      'workCities': workCities,
+      'country': country,
       'dialect': dialect,
-      'isAvailable': isAvailable,
+      'profession': profession, // تم التغيير هنا
+      'experienceYears': experienceYears,
+      'workCities': workCities,
+      'profilePictureUrl': profilePictureUrl,
+      'isOnline': isOnline,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'lastSeen': Timestamp.fromDate(lastSeen),
     };
+  }
+
+  // دالة fromFirestore لتسهيل التحويل من DocumentSnapshot
+  factory UserModel.fromFirestore(DocumentSnapshot doc) {
+    return UserModel.fromMap(doc.data() as Map<String, dynamic>);
   }
 
   UserModel copyWith({
     String? uid,
+    String? name,
     String? email,
-    String? displayName,
-    String? photoUrl,
+    String? phone,
     UserType? userType,
-    String? professionConceptKey,
-    List<String>? workCities,
+    String? country,
     String? dialect,
-    bool? isAvailable,
+    String? profession,
+    int? experienceYears,
+    List<String>? workCities,
+    String? profilePictureUrl,
+    bool? isOnline,
+    DateTime? createdAt,
+    DateTime? lastSeen,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
+      name: name ?? this.name,
       email: email ?? this.email,
-      displayName: displayName ?? this.displayName,
-      photoUrl: photoUrl ?? this.photoUrl,
+      phone: phone ?? this.phone,
       userType: userType ?? this.userType,
-      professionConceptKey: professionConceptKey ?? this.professionConceptKey,
-      workCities: workCities ?? this.workCities,
+      country: country ?? this.country,
       dialect: dialect ?? this.dialect,
-      isAvailable: isAvailable ?? this.isAvailable,
+      profession: profession ?? this.profession,
+      experienceYears: experienceYears ?? this.experienceYears,
+      workCities: workCities ?? this.workCities,
+      profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
+      isOnline: isOnline ?? this.isOnline,
+      createdAt: createdAt ?? this.createdAt,
+      lastSeen: lastSeen ?? this.lastSeen,
     );
   }
 }
