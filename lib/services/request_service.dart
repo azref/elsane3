@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
@@ -31,7 +30,7 @@ class RequestService {
 
       // 2. تحديد تاريخ انتهاء صلاحية الطلب (48 ساعة من الآن)
       DateTime createdAt = DateTime.now();
-      DateTime expiresAt = createdAt.add(Duration(hours: 48));
+      DateTime expiresAt = createdAt.add(const Duration(hours: 48));
 
       // 3. بناء قناة الطلب (مثال: building_riyadh)
       String channel = '${professionConceptKey}_${city.toLowerCase().replaceAll(' ', '_')}';
@@ -40,7 +39,7 @@ class RequestService {
       RequestModel newRequest = RequestModel(
         id: requestId,
         userId: user.uid,
-        userName: user.displayName ?? 'Unknown',
+        userName: user.name ?? 'Unknown',
         userPhone: user.email,
         professionConceptKey: professionConceptKey,
         professionDialectName: professionDialectName,
@@ -111,6 +110,3 @@ class RequestService {
     }
   }
 }
-
-
-
