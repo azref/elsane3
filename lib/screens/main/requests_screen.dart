@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // <-- تم التغيير
 import 'package:audioplayers/audioplayers.dart';
 import 'package:alsana_alharfiyin/constants/app_colors.dart';
 import 'package:alsana_alharfiyin/constants/app_strings.dart';
 import 'package:alsana_alharfiyin/models/request_model.dart';
-import 'package:alsana_alharfiyin/models/user_model.dart'; // Added UserType import
+import 'package:alsana_alharfiyin/models/user_model.dart';
 import 'package:alsana_alharfiyin/providers/auth_provider.dart';
 import 'package:alsana_alharfiyin/providers/request_provider.dart';
+import 'package:alsana_alharfiyin/widgets/custom_button.dart'; // <-- تم إضافة import
 
-class RequestsScreen extends StatefulWidget {
+// تم تحويله إلى ConsumerStatefulWidget
+class RequestsScreen extends ConsumerStatefulWidget {
   const RequestsScreen({super.key});
 
   @override
-  State<RequestsScreen> createState() => _RequestsScreenState();
+  ConsumerState<RequestsScreen> createState() => _RequestsScreenState();
 }
 
-class _RequestsScreenState extends State<RequestsScreen> {
+// تم تحويله إلى ConsumerState
+class _RequestsScreenState extends ConsumerState<RequestsScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   String? _currentlyPlayingId;
 
@@ -42,8 +45,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${AppStrings.audioPlaybackError}: $e'),
+          const SnackBar( // <-- تم إصلاح الخطأ هنا
+            content: Text(AppStrings.audioPlaybackError), // <-- تم إصلاح الخطأ هنا
             backgroundColor: AppColors.errorColor,
           ),
         );
@@ -68,13 +71,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = Provider.of<authProvider>(context);
+    // استخدام ref.watch من Riverpod بدلاً من Provider.of
+    final authState = ref.watch(authProvider);
     final user = authState.user;
 
     if (user == null || user.userType != UserType.craftsman) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(AppStrings.requests),
+          title: const Text(AppStrings.requests), // <-- تم إضافة const
           backgroundColor: AppColors.primaryColor,
           foregroundColor: AppColors.textOnPrimaryColor,
         ),
@@ -93,14 +97,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
     // استخدام الاستماع المحدود والمفلتر للطلبات
     final requestsAsync = ref.watch(craftsmanRequestsProvider(
       CraftsmanRequestParams(
-        professionConceptKey: user.professionConceptKey ?? '', // Corrected to professionConceptKey
+        professionConceptKey: user.professionConceptKey ?? '',
         workCities: user.workCities ?? [],
       ),
     ));
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.requests),
+        title: const Text(AppStrings.requests), // <-- تم إضافة const
         backgroundColor: AppColors.primaryColor,
         foregroundColor: AppColors.textOnPrimaryColor,
         actions: [
@@ -125,7 +129,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     color: AppColors.textSecondaryColor,
                   ),
                   const SizedBox(height: 16),
-                  Text(
+                  const Text( // <-- تم إضافة const
                     AppStrings.noRequestsFound,
                     style: TextStyle(
                       fontSize: 18,
@@ -133,7 +137,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Text(
+                  const Text( // <-- تم إضافة const
                     AppStrings.ensureAvailabilityStatus,
                     style: TextStyle(
                       fontSize: 14,
@@ -147,9 +151,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
 
           return RefreshIndicator(
             onRefresh: () async {
-              ref.invalidate(craftsmanRequestsProvider);
+              ref.invalidate(craftsmanRequestsProvider( // <-- تم إصلاح الخطأ هنا
+                CraftsmanRequestParams(
+                  professionConceptKey: user.professionConceptKey ?? '',
+                  workCities: user.workCities ?? [],
+                ),
+              ));
             },
-            color: AppColors.primaryColor, // Added color for RefreshIndicator
+            color: AppColors.primaryColor,
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: requests.length,
@@ -173,9 +182,9 @@ class _RequestsScreenState extends State<RequestsScreen> {
                 color: AppColors.errorColor,
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text( // <-- تم إضافة const
                 AppStrings.errorLoadingRequests,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   color: AppColors.errorColor,
                 ),
@@ -191,9 +200,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
               ),
               const SizedBox(height: 16),
               CustomButton(
-                label: AppStrings.retry,
+                text: AppStrings.retry, // <-- تم إصلاح الخطأ هنا
                 onPressed: () {
-                  ref.invalidate(craftsmanRequestsProvider);
+                   ref.invalidate(craftsmanRequestsProvider( // <-- تم إصلاح الخطأ هنا
+                    CraftsmanRequestParams(
+                      professionConceptKey: user.professionConceptKey ?? '',
+                      workCities: user.workCities ?? [],
+                    ),
+                  ));
                 },
               ),
             ],
@@ -218,7 +232,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
           color: isExpired ? AppColors.errorColor : AppColors.borderColor,
           width: isExpired ? 2 : 1,
         ),
-        boxShadow: [
+        boxShadow: const [ // <-- تم إضافة const
           BoxShadow(
             color: AppColors.shadowColor,
             blurRadius: 4,
@@ -239,7 +253,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  request.professionDialectName,
+                  request.professionConceptKey, // <-- تم إصلاح الخطأ هنا
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -292,7 +306,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
               ),
               const SizedBox(width: 8),
               Text(
-                '${request.city}, ${request.country}',
+                request.city, // <-- تم إصلاح الخطأ هنا
                 style: const TextStyle(
                   fontSize: 14,
                   color: AppColors.textSecondaryColor,
@@ -392,13 +406,11 @@ class _RequestsScreenState extends State<RequestsScreen> {
               // Contact Button
               if (!isExpired)
                 CustomButton(
-                  label: AppStrings.contact,
+                  text: AppStrings.contact, // <-- تم إصلاح الخطأ هنا
                   onPressed: () {
                     // TODO: Start chat with client
                   },
                   icon: Icons.chat,
-                  isOutlined: false, // Ensure it's not outlined if it's a primary action
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 ),
             ],
           ),
@@ -407,5 +419,3 @@ class _RequestsScreenState extends State<RequestsScreen> {
     );
   }
 }
-
-

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // <-- تم التغيير
 import '../../constants/app_colors.dart';
 import '../../constants/app_strings.dart';
 import '../../models/chat_model.dart';
@@ -7,8 +7,9 @@ import '../../providers/auth_provider.dart';
 import '../../providers/chat_provider.dart';
 import '../chat/chat_detail_screen.dart';
 
-class ChatsScreen extends StatelessWidget {
-  const ChatsScreen({Key? key}) : super(key: key);
+// تم تحويله إلى ConsumerWidget
+class ChatsScreen extends ConsumerWidget {
+  const ChatsScreen({super.key});
 
   String _formatTimeAgo(DateTime dateTime) {
     final now = DateTime.now();
@@ -26,8 +27,9 @@ class ChatsScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final authState = Provider.of<AuthProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) { // <-- تم إضافة WidgetRef
+    // استخدام ref.watch من Riverpod
+    final authState = ref.watch(authProvider);
     final user = authState.user;
 
     if (user == null) {
@@ -38,13 +40,14 @@ class ChatsScreen extends StatelessWidget {
       );
     }
 
-    final chatsAsync = Provider.of<ChatProvider>(context).getUserChats(userId);
+    // استخدام ref.watch من Riverpod
+    final chatsAsync = ref.watch(userChatsProvider(user.uid));
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppStrings.chats),
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.textOnPrimary,
+        title: const Text(AppStrings.chats), // <-- تم إضافة const
+        backgroundColor: AppColors.primaryColor, // <-- تم إصلاح اللون
+        foregroundColor: AppColors.textOnPrimaryColor, // <-- تم إصلاح اللون
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -64,14 +67,14 @@ class ChatsScreen extends StatelessWidget {
                   Icon(
                     Icons.chat_bubble_outline,
                     size: 64,
-                    color: AppColors.textSecondary,
+                    color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
                   ),
                   SizedBox(height: 16),
                   Text(
                     AppStrings.noChatsFound,
                     style: TextStyle(
                       fontSize: 18,
-                      color: AppColors.textSecondary,
+                      color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
                     ),
                   ),
                   SizedBox(height: 8),
@@ -79,7 +82,7 @@ class ChatsScreen extends StatelessWidget {
                     'ابدأ محادثة جديدة من خلال الرد على طلب عمل',
                     style: TextStyle(
                       fontSize: 14,
-                      color: AppColors.textHint,
+                      color: AppColors.hintTextColor, // <-- تم إصلاح اللون
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -90,7 +93,7 @@ class ChatsScreen extends StatelessWidget {
 
           return RefreshIndicator(
             onRefresh: () async {
-              // // // ref.invalidate(userChatsProvider);
+              ref.invalidate(userChatsProvider(user.uid));
             },
             child: ListView.builder(
               itemCount: chats.length,
@@ -111,22 +114,22 @@ class ChatsScreen extends StatelessWidget {
               const Icon(
                 Icons.error_outline,
                 size: 64,
-                color: AppColors.error,
+                color: AppColors.errorColor, // <-- تم إصلاح اللون
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text( // <-- تم إضافة const
                 'خطأ في تحميل المحادثات',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
-                  color: AppColors.error,
+                  color: AppColors.errorColor, // <-- تم إصلاح اللون
                 ),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  // // // ref.invalidate(userChatsProvider);
+                  ref.invalidate(userChatsProvider(user.uid));
                 },
-                child: Text(AppStrings.retry),
+                child: const Text(AppStrings.retry), // <-- تم إضافة const
               ),
             ],
           ),
@@ -137,17 +140,17 @@ class ChatsScreen extends StatelessWidget {
 
   Widget _buildChatTile(BuildContext context, ChatModel chat, String currentUserId) {
     // الحصول على معلومات الطرف الآخر في المحادثة
-    final otherUserId = chat.participants.firstWhere((id) => id != currentUserId);
+    final otherUserId = chat.participants.firstWhere((id) => id != currentUserId, orElse: () => '');
     final otherUserName = chat.participantNames[otherUserId] ?? 'مستخدم';
     final isLastMessageFromMe = chat.lastMessageSenderId == currentUserId;
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.primaryColor, // <-- تم إصلاح اللون
         child: Text(
-          otherUserName.substring(0, 1).toUpperCase(),
+          otherUserName.isNotEmpty ? otherUserName.substring(0, 1).toUpperCase() : '?',
           style: const TextStyle(
-            color: AppColors.textOnPrimary,
+            color: AppColors.textOnPrimaryColor, // <-- تم إصلاح اللون
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -156,7 +159,7 @@ class ChatsScreen extends StatelessWidget {
         otherUserName,
         style: const TextStyle(
           fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
+          color: AppColors.textPrimaryColor, // <-- تم إصلاح اللون
         ),
       ),
       subtitle: Row(
@@ -165,17 +168,17 @@ class ChatsScreen extends StatelessWidget {
             const Icon(
               Icons.done,
               size: 16,
-              color: AppColors.textSecondary,
+              color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
             ),
             const SizedBox(width: 4),
           ],
           Expanded(
             child: Text(
-              chat.lastMessageContent.isEmpty 
-                  ? 'لا توجد رسائل' 
+              chat.lastMessageContent.isEmpty
+                  ? 'لا توجد رسائل'
                   : chat.lastMessageContent,
               style: const TextStyle(
-                color: AppColors.textSecondary,
+                color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
                 fontSize: 14,
               ),
               maxLines: 1,
@@ -192,7 +195,7 @@ class ChatsScreen extends StatelessWidget {
             _formatTimeAgo(chat.lastMessageTime),
             style: const TextStyle(
               fontSize: 12,
-              color: AppColors.textSecondary,
+              color: AppColors.textSecondaryColor, // <-- تم إصلاح اللون
             ),
           ),
           const SizedBox(height: 4),
@@ -204,7 +207,7 @@ class ChatsScreen extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => ChatDetailScreen(
               chatId: chat.id,
-              otherUserName: otherUserName,
+              otherUserId: otherUserId, // <-- تم إضافة otherUserId
             ),
           ),
         );
@@ -212,4 +215,3 @@ class ChatsScreen extends StatelessWidget {
     );
   }
 }
-
