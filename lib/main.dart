@@ -1,7 +1,7 @@
-yimport 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:alsana_alharfiyin/services/firebase_core_service.dart';
 import 'package:alsana_alharfiyin/services/ads_service.dart';
@@ -9,16 +9,13 @@ import 'package:alsana_alharfiyin/services/analytics_service.dart';
 import 'package:alsana_alharfiyin/constants/app_colors.dart';
 import 'package:alsana_alharfiyin/screens/auth/login_screen.dart';
 import 'package:alsana_alharfiyin/screens/main/main_screen.dart';
-import 'package:alsana_alharfiyin/providers/auth_provider.dart' as app_auth;
-import 'package:alsana_alharfiyin/providers/profession_provider.dart';
-import 'package:alsana_alharfiyin/providers/request_provider.dart';
-import 'package:alsana_alharfiyin/providers/chat_provider.dart';
+import 'package:alsana_alharfiyin/providers/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize Firebase
-  await FirebaseCoreService.initialize();
+  await Firebase.initializeApp();
   
   // Initialize Ads
   await AdsService.initialize();
@@ -51,13 +48,7 @@ void main() async {
   };
   
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => app_auth.AuthProvider()),
-        ChangeNotifierProvider(create: (_) => ProfessionProvider()),
-        ChangeNotifierProvider(create: (_) => RequestProvider()),
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
-      ],
+    ProviderScope(
       child: const AlsanaAlharfiyinApp(),
     ),
   );
@@ -159,31 +150,28 @@ class AlsanaAlharfiyinApp extends StatelessWidget {
   }
 }
 
-class AuthWrapper extends StatelessWidget {
+class AuthWrapper extends ConsumerWidget {
   const AuthWrapper({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<app_auth.AuthProvider>(
-      builder: (context, authProvider, child) {
-        if (authProvider.isLoading) {
-          return const Scaffold(
-            backgroundColor: AppColors.backgroundColor,
-            body: Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryColor),
-              ),
-            ),
-          );
-        }
-        
-        if (authProvider.user != null) {
-          return const MainScreen();
-        } else {
-          return const LoginScreen();
-        }
-      },
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authProvider = ref.watch(authProvider);
+    
+    if (authProvider.isLoading) {
+      return const Scaffold(
+        backgroundColor: AppColors.backgroundColor,
+        body: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryColor),
+          ),
+        ),
+      );
+    }
+    
+    if (authProvider.user != null) {
+      return const MainScreen();
+    } else {
+      return const LoginScreen();
+    }
   }
 }
-
