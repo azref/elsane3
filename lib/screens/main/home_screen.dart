@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:alsana_alharfiyin/models/user_model.dart';
 import 'package:alsana_alharfiyin/providers/auth_provider.dart';
-import 'package:alsana_alharfiyin/providers/profession_provider.dart';
 import 'package:alsana_alharfiyin/widgets/custom_button.dart';
 import 'package:alsana_alharfiyin/widgets/audio_recorder_widget.dart';
 import 'package:alsana_alharfiyin/constants/app_colors.dart';
-import 'package:alsana_alharfiyin/constants/app_strings.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,9 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? _selectedProfessionConceptKey;
-  String? _selectedProfessionName;
-
   @override
   Widget build(BuildContext context) {
     final authState = AuthProvider.of(context);
@@ -123,7 +118,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       const SizedBox(height: 12),
                       DropdownButtonFormField<String>(
-                        value: _selectedProfessionConceptKey,
                         decoration: InputDecoration(
                           hintText: 'اختر نوع الحرفي',
                           filled: true,
@@ -143,9 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         items: [],
                         onChanged: (value) {
-                          setState(() {
-                            _selectedProfessionConceptKey = value;
-                          });
+                          // TODO: Handle profession selection
                         },
                       ),
                     ],
@@ -156,7 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 // Audio Recorder
                 AudioRecorderWidget(
-                  selectedProfession: _selectedProfessionName,
                   onRecordingComplete: (audioPath) {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -172,19 +163,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 CustomButton(
                   text: 'إرسال الطلب',
                   onPressed: () {
-                    if (_selectedProfessionConceptKey == null || _selectedProfessionConceptKey!.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('يرجى اختيار نوع الحرفي'),
-                          backgroundColor: AppColors.errorColor,
-                        ),
-                      );
-                      return;
-                    }
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('تم إرسال الطلب'),
-                        backgroundColor: AppColors.primaryColor,
+                        content: Text('يرجى اختيار نوع الحرفي أولاً'),
+                        backgroundColor: AppColors.errorColor,
                       ),
                     );
                   },
