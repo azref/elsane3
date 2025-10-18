@@ -4,16 +4,15 @@ import '../../constants/app_colors.dart';
 import '../../constants/app_strings.dart';
 import '../../providers/auth_provider.dart';
 import '../../screens/auth/login_screen.dart';
-import '../../models/user_model.dart'; // تم إضافة هذا الاستيراد لـ UserType
+import '../../models/user_model.dart';
 
-class ProfileScreen extends ConsumerWidget { // تم التغيير إلى ConsumerWidget
-  const ProfileScreen({Key? key}) : super(key: key);
+class ProfileScreen extends ConsumerWidget {
+  const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) { // تم إضافة WidgetRef ref
-    // مراقبة authProvider للتفاعل مع التغييرات في حالة المصادقة
-    final authService = ref.watch(authProvider); // استخدام ref.watch
-    final currentUser = authService.user; // افتراض أن authProvider يكشف عن UserModel مباشرة
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authService = ref.watch(authProvider);
+    final currentUser = authService.user;
 
     return Scaffold(
       appBar: AppBar(
